@@ -1,0 +1,85 @@
+' Class diagram for obstacle detection module.
+
+@startuml
+' основной класс модуля
+class ObstacleDetectionModule {
+    + activate(): void
+    + processSensorData(sensorData: SensorData): void
+    + classifyObstacle(obstacleData: ObstacleData): Hazard
+    + generateAlert(hazard: Hazard): void
+    + sendHazardSignal(hazard: Hazard, taskModule: TaskModule): void
+    # continuouslyMonitor(): void
+    # analyzeHazard(sensorData: SensorData): Hazard
+    - priority: int = 1
+}
+
+' Датчик (камера и другие)
+class Sensor {
+    + startMonitoring(): void
+    + stopMonitoring(): void
+    + getData(): SensorData
+}
+
+' Система аудиосвязи с пользователем (звуки и речевые сообщения)
+class AudioFeedbackSystem {
+    + playAudioAlert(message: String): void
+    + playVoiceMessage(description: String): void
+    + createSoundscape(hazard: Hazard): void
+}
+
+' Активная задача, которой передается сообщение об опасности
+class TaskModule {
+    + adjustExecution(hazardSignal: HazardSignal): void
+}
+
+' Данные камеры и других датчиков
+class SensorData {
+    - rawCameraFeed: CameraFeed
+    - imuData: IMUData
+    + parseData(): ParsedData
+}
+
+' Опасность
+class Hazard {
+    - type: HazardType
+    - position: Position
+    - severity: Severity
+    + getDescription(): String
+    + toSignal(): HazardSignal
+}
+
+' Сигнал опасности
+class HazardSignal {
+    - hazardType: HazardType
+    - location: Position
+    - severity: Severity
+}
+
+' Зависимости классов
+ObstacleDetectionModule --> Sensor : uses
+ObstacleDetectionModule --> AudioFeedbackSystem : uses
+ObstacleDetectionModule --> TaskModule : sends hazard signals
+ObstacleDetectionModule --> Hazard : identifies
+Sensor --> SensorData : provides
+Hazard --> HazardSignal : creates
+AudioFeedbackSystem --> Hazard : provides feedback
+
+' Тип опасности
+enum HazardType {
+    Stationary
+    Moving
+}
+
+' Степень опасности
+enum Severity {
+    Low
+    Medium
+    High
+}
+
+' Вспомогательные классы
+class CameraFeed
+class IMUData
+class Position
+class ParsedData
+@enduml

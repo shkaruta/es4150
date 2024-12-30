@@ -1,0 +1,52 @@
+' Use case diagram.
+
+@startuml
+' BVI - незрячий или слабовидящий
+actor User as "Blind or Visually Impaired User (BVI)"
+
+rectangle "Mobile Navigation App" {
+
+    ' Обнаружение препятствий
+    BVI -- (Obstacle Detection)
+    (Obstacle Detection) --> (Classify Obstacles) : CV and ML
+    (Classify Obstacles) --> (Generate Sonification Feedback) : Audio & Tactile
+    (Generate Sonification Feedback) --> BVI
+
+    ' Распознавание объектов
+    BVI -- (Object Recognition)
+    (Object Recognition) --> (Detect Objects) : CV and DML
+    (Detect Objects) --> (Describe Objects) : Audio Feedback
+    (Describe Objects) --> BVI
+
+    ' Step-by-step навигация
+    BVI -- (Step-by-Step Navigation)
+    (Step-by-Step Navigation) --> (Route Calculation) : Navigation Module
+    (Route Calculation) --> (Generate Instructions) : Navigation Module
+    (Generate Instructions) --> BVI : Audio & Tactile Feedback
+
+    ' Запись трека
+    BVI -- (Track Recording)
+    (Track Recording) --> (Start Track Logging) : SLAM Module
+    (Start Track Logging) --> (Save Path Data) : Internal Storage
+    (Save Path Data) --> BVI : Confirm Recording
+
+    ' Создание карты окружения
+    BVI -- (Map Creation)
+    (Map Creation) --> (Analyze Environment) : SLAM Module
+    (Analyze Environment) --> (Build Map) : SLAM Module
+    (Build Map) --> (Generate Sonification Feedback) : Audio Feedback
+    (Build Map) --> BVI : Contextual Updates
+
+    ' Конфигурирование приложения
+    BVI -- (App Configuration)
+    (App Configuration) --> (Initialize Settings) : Onboarding
+    (Initialize Settings) --> (Configure Feedback) : User Preferences
+    (Configure Feedback) --> (Personalize Navigation) : Accessibility
+    (Personalize Navigation) --> BVI : Confirm Setup
+
+    ' Облачные вычисления и хранение данных
+    BVI -- (Use Cloud Services)
+    (Use Cloud Services) --> (Perform Heavy Calculations) : Object Recognition
+    (Use Cloud Services) --> (Sync Map Data) : Map Backup
+}
+@enduml

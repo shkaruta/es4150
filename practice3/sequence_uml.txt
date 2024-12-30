@@ -1,0 +1,73 @@
+' Sequence diagram.
+
+@startuml
+
+actor User as BVI
+participant "Mobile App" as App
+participant "Sensors (Camera, IMU, etc.)" as Sensors
+participant "Obstacle Detection Module" as ObstacleModule
+participant "Object Recognition Module" as ObjectModule
+participant "SLAM Module" as SLAMModule
+participant "Navigation Module" as NavigationModule
+participant "Audio Feedback System" as AudioSystem
+participant "Cloud Services (Optional)" as Cloud
+
+' Запуск приложения
+BVI -> App: Launch Application
+App -> App: Initialize Modules and Settings
+App -> Sensors: Activate Sensors
+Sensors --> App: Confirm Activation
+
+' Конфигурация приложения
+BVI -> App: Configure Feedback Settings
+App -> App: Save User Preferences
+
+' Obstacle Detection Flow
+' Модуль непрерывно сканирует пространство и при обнаружении опасных препятствий дает сигнал пользователю и активной задаче
+App -> ObstacleModule: Start Obstacle Detection
+ObstacleModule -> Sensors: Start Continuous Monitoring
+Sensors --> ObstacleModule: Continuously Provide Sensor Data
+ObstacleModule -> AudioSystem: Generate Audio Alerts (Immediate Feedback)
+AudioSystem --> BVI: Provide Audio Alert (Obstacle Detected)
+ObstacleModule -> ObjectModule: Forward Data (Obstacle Data for Context)
+
+' Object Recognition Flow
+' Модуль распознавания объектов запускается задачами построения карты, навигации и прямым запросом пользователя
+BVI -> App: Request Object Recognition
+App -> ObjectModule: Perform Object Recognition
+ObjectModule -> Sensors: Collect Image/Environment Data
+Sensors --> ObjectModule: Return Data (Images, Depth Maps)
+ObjectModule -> Cloud: Perform Object Recognition (Cloud Computing)
+Cloud --> ObjectModule: Return Object Recognition Results
+ObjectModule -> AudioSystem: Generate Object Feedback (Soundscape/Description)
+AudioSystem --> BVI: Provide Object Feedback (Soundscape & Speech Description)
+
+' Navigation Flow
+' Навигация с подсказками пользователю
+BVI -> App: Request Navigation to Destination
+App -> NavigationModule: Calculate Route
+NavigationModule -> SLAMModule: Access Environmental Data
+SLAMModule -> Sensors: Collect Environmental Data
+Sensors --> SLAMModule: Return Data 
+SLAMModule --> NavigationModule: Processed Map Data
+NavigationModule --> App: Navigation Route
+App -> AudioSystem: Generate Step-by-Step Instructions
+AudioSystem --> BVI: Provide Navigation Feedback (Audio, Tactile)
+
+' Map Creation and Sync (optional)
+' Создание карты окружения при помощи SLAM-технологии (simultaneous localization and mapping)
+App -> SLAMModule: Start Map Creation
+SLAMModule -> Sensors: Collect Environmental Data
+Sensors --> SLAMModule: Sensor Data (Map Updates)
+SLAMModule -> Cloud: Sync Map Data
+Cloud --> SLAMModule: Sync Confirmation
+SLAMModule --> App: Provide Updated Map Data
+
+' Завершение сеанса
+BVI -> App: End Session
+App -> Sensors: Deactivate Sensors
+Sensors --> App: Confirm Deactivation
+App -> AudioSystem: Provide Session End Feedback
+App -> Cloud: Backup Session Data
+Cloud --> App: Backup Confirmation
+@enduml
