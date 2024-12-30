@@ -1,7 +1,5 @@
-' Class diagram for obstacle detection module.
-
 @startuml
-' основной класс модуля
+' Основной класс модуля
 class ObstacleDetectionModule {
     + activate(): void
     + processSensorData(sensorData: SensorData): void
@@ -82,4 +80,14 @@ class CameraFeed
 class IMUData
 class Position
 class ParsedData
+
+' Зависимости вспомогательных классов
+SensorData --> CameraFeed : contains
+SensorData --> IMUData : contains
+Hazard --> Position : identifies location
+SensorData --> ParsedData : parses data
+HazardSignal --> HazardType : uses
+HazardSignal --> Severity : uses
+Hazard --> HazardType : uses
+Hazard --> Severity : uses
 @enduml
